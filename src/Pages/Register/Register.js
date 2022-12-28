@@ -1,23 +1,53 @@
-import React from 'react';
+import { GoogleAuthProvider } from 'firebase/auth';
+import React, { useContext } from 'react';
 import { FaGoogle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../Context/AuthProvider/AuthProvider';
 
 const Register = () => {
+
+    const { createUser, updateUserProfile, googleLogin } = useContext(AuthContext);
+
+    const googleProvider = new GoogleAuthProvider();
 
     const handleRegister = event => {
         event.preventDefault()
         const form = event.target;
         const name = form.name.value;
-        const userImage = form.userImage.value;
+        const photoURL = form.photoURL.value;
         const university = form.university.value;
         const address = form.address.value;
         const email = form.email.value;
         const password = form.password.value;
+
+        createUser(email, password)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                handleUpdateUserProfile(name, photoURL, university, address)
+            })
+            .catch(error => { console.error(error) })
+    }
+
+    const handleUpdateUserProfile = (name, photoURL, university, address) => {
+        const profile = {
+            displayName: name,
+            photoURL: photoURL,
+            university, address
+        }
+        updateUserProfile(profile)
+            .then(() => { })
+            .catch(error => console.error(error));
     }
 
 
     const handleGoogleRegister = () => {
-
+        googleLogin(googleProvider)
+            .then(result => {
+                const user = result.user
+                console.log(user)
+            })
+            .catch(error => console.error(error))
     }
 
 
@@ -35,7 +65,7 @@ const Register = () => {
                     <label className="label">
                         <span className="text-xl">Photo URL</span>
                     </label>
-                    <input type="text" name='userImage' placeholder="Photo URL" className="input input-bordered" />
+                    <input type="text" name='photoURL' placeholder="Photo URL" className="input input-bordered" />
                 </div>
                 <div className="form-control">
                     <label className="label">

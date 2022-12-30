@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { FaUserAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../Context/AuthProvider/AuthProvider';
 
 const Navbar = () => {
 
@@ -17,6 +19,14 @@ const Navbar = () => {
             <Link to='/about'>About</Link>
         </li>
     </React.Fragment>
+
+    const { user, logOut } = useContext(AuthContext);
+
+    const handleLogOut = () => {
+        logOut()
+            .then(() => { })
+            .catch(error => console.error(error))
+    }
 
     return (
         <div className="navbar bg-base-100">
@@ -44,11 +54,25 @@ const Navbar = () => {
                 <div className="avatar-group -space-x-6">
                     <div className="avatar">
                         <div className="w-12">
-                            <img src="https://placeimg.com/192/192/people" alt='' />
+
+                            {
+                                user?.photoURL ?
+                                    <img src={user?.photoURL} alt='' />
+                                    :
+                                    <FaUserAlt className='w-12' />
+                            }
+
+
                         </div>
                     </div>
                 </div>
-                <Link to='/login' className="btn btn-sm btn-info">LogIn</Link>
+                {
+                    user?.uid ?
+                        <Link onClick={handleLogOut} className="btn btn-sm btn-info">LogOut</Link>
+                        :
+                        <Link to='/login' className="btn btn-sm btn-info">LogIn</Link>
+                }
+
             </div>
         </div>
     );

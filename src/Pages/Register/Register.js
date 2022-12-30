@@ -24,20 +24,40 @@ const Register = () => {
             .then(result => {
                 const user = result.user;
                 console.log(user);
-                handleUpdateUserProfile(name, photoURL, university, address)
+                handleUpdateUserProfile(name, photoURL)
             })
             .catch(error => { console.error(error) })
+
+
+        const userInformation = { name, email, university, address }
+
+        fetch('https://newserver-ten.vercel.app/userinfo', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(userInformation)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.acknowledged) {
+                    form.reset();
+                }
+            })
+            .catch(error => console.log(error))
     }
 
-    const handleUpdateUserProfile = (name, photoURL, university, address) => {
+    const handleUpdateUserProfile = (name, photoURL) => {
         const profile = {
             displayName: name,
-            photoURL: photoURL,
-            university, address
+            photoURL: photoURL
         }
+
         updateUserProfile(profile)
             .then(() => { })
             .catch(error => console.error(error));
+
     }
 
 

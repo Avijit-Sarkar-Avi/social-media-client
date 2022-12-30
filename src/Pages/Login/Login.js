@@ -51,7 +51,7 @@ const Login = () => {
                 <div>
                     <div className="card flex-shrink-0 w-72 lg:w-96 shadow-2xl bg-base-100">
                         <div className="card-body">
-                            <form onClick={handleLogin}>
+                            <form onSubmit={handleLogin}>
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Email</span>
